@@ -284,16 +284,6 @@
             }
         }
 
-        window.saveApiKey = function() {
-            const key = document.getElementById('ytApiKey').value.trim();
-            localStorage.setItem('suno_youtube_apikey_v3', key);
-        }
-
-        window.clearApiKey = function() {
-            document.getElementById('ytApiKey').value = '';
-            localStorage.removeItem('suno_youtube_apikey_v3');
-        }
-
         window.switchMode = function(mode) {
             const urlBtn = document.getElementById('tabUrlBtn');
             const uploadBtn = document.getElementById('tabUploadBtn');
