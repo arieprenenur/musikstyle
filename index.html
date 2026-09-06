@@ -492,7 +492,8 @@
                 return;
             }
 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
+            // MENGGUNAKAN MODEL TERBARU GEMINI 3.6 FLASH
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${geminiApiKey}`;
 
             let response = null;
             try {
