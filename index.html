@@ -26,28 +26,59 @@
     <main class="w-full max-w-4xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-6 sm:p-8 mb-6">
         
         <!-- API Key Persistent Section -->
-        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 mb-6 space-y-2">
-            <div class="flex items-center justify-between">
-                <label for="ytApiKey" class="text-xs font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
-                    YouTube Data API v3 Key (Wajib untuk Metadata Valid 100%)
-                </label>
-                <span class="text-[11px] text-emerald-400 font-medium" id="apiKeyStatus">Siap</span>
+        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 mb-6 space-y-4">
+            
+            <!-- YouTube API Key -->
+            <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                    <label for="ytApiKey" class="text-xs font-semibold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"></path></svg>
+                        YouTube Data API v3 Key (Untuk Metadata)
+                    </label>
+                    <span class="text-[11px] text-emerald-400 font-medium" id="ytApiKeyStatus">Tersimpan</span>
+                </div>
+                <div class="flex gap-2">
+                    <input 
+                        type="password" 
+                        id="ytApiKey" 
+                        placeholder="Masukkan YouTube API Key Anda..." 
+                        class="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                        oninput="saveApiKey('yt')"
+                    >
+                    <button 
+                        onclick="clearApiKey('yt')" 
+                        class="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 px-3 py-2 rounded-lg text-xs transition-all cursor-pointer"
+                    >
+                        Hapus
+                    </button>
+                </div>
             </div>
-            <div class="flex gap-2">
-                <input 
-                    type="password" 
-                    id="ytApiKey" 
-                    placeholder="Masukkan YouTube API Key Anda..." 
-                    class="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
-                    oninput="saveApiKey()"
-                >
-                <button 
-                    onclick="clearApiKey()" 
-                    class="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 px-3 py-2 rounded-lg text-xs transition-all cursor-pointer"
-                >
-                    Hapus
-                </button>
+
+            <!-- Gemini API Key -->
+            <div class="space-y-2 border-t border-slate-800 pt-4">
+                <div class="flex items-center justify-between">
+                    <label for="geminiApiKey" class="text-xs font-semibold text-indigo-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Gemini API Key (Wajib untuk Analisis AI)
+                    </label>
+                    <span class="text-[11px] text-indigo-400 font-medium" id="geminiApiKeyStatus">Tersimpan</span>
+                </div>
+                <div class="flex gap-2">
+                    <input 
+                        type="password" 
+                        id="geminiApiKey" 
+                        placeholder="Masukkan Gemini API Key Anda..." 
+                        class="flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+                        oninput="saveApiKey('gemini')"
+                    >
+                    <button 
+                        onclick="clearApiKey('gemini')" 
+                        class="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 px-3 py-2 rounded-lg text-xs transition-all cursor-pointer"
+                    >
+                        Hapus
+                    </button>
+                </div>
+                <p class="text-[10px] text-slate-500">Dapatkan key dari <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-indigo-400 hover:underline">Google AI Studio</a>.</p>
             </div>
         </div>
 
@@ -218,13 +249,38 @@
         let selectedAudioMime = null;
 
         window.addEventListener('DOMContentLoaded', () => {
-            loadApiKey();
+            loadApiKeys();
         });
 
-        function loadApiKey() {
-            const savedKey = localStorage.getItem('suno_youtube_apikey_v3');
-            if (savedKey) {
-                document.getElementById('ytApiKey').value = savedKey;
+        function loadApiKeys() {
+            const savedYtKey = localStorage.getItem('suno_youtube_apikey_v3');
+            if (savedYtKey) {
+                document.getElementById('ytApiKey').value = savedYtKey;
+            }
+            
+            const savedGeminiKey = localStorage.getItem('suno_gemini_apikey');
+            if (savedGeminiKey) {
+                document.getElementById('geminiApiKey').value = savedGeminiKey;
+            }
+        }
+
+        window.saveApiKey = function(type) {
+            if (type === 'yt') {
+                const key = document.getElementById('ytApiKey').value.trim();
+                localStorage.setItem('suno_youtube_apikey_v3', key);
+            } else if (type === 'gemini') {
+                const key = document.getElementById('geminiApiKey').value.trim();
+                localStorage.setItem('suno_gemini_apikey', key);
+            }
+        }
+
+        window.clearApiKey = function(type) {
+            if (type === 'yt') {
+                document.getElementById('ytApiKey').value = '';
+                localStorage.removeItem('suno_youtube_apikey_v3');
+            } else if (type === 'gemini') {
+                document.getElementById('geminiApiKey').value = '';
+                localStorage.removeItem('suno_gemini_apikey');
             }
         }
 
@@ -440,8 +496,14 @@
             errorBox.classList.add('hidden');
             resultSection.classList.add('hidden');
 
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            const geminiApiKey = document.getElementById('geminiApiKey').value.trim();
+            if (!geminiApiKey) {
+                hideLoading();
+                showError("Gemini API Key belum diisi. Harap masukkan API key Anda pada kolom di atas.");
+                return;
+            }
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiApiKey}`;
 
             let response = null;
             try {
@@ -450,12 +512,23 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-            } catch (e) {}
+            } catch (e) {
+                console.error("Fetch error:", e);
+            }
 
             hideLoading();
 
             if (!response || !response.ok) {
-                showError("Gagal terhubung ke Gemini API. Periksa koneksi internet atau ukuran file audio Anda.");
+                let errMsg = "Gagal terhubung ke Gemini API.";
+                if (response) {
+                    try {
+                        const errData = await response.json();
+                        errMsg += ` Error: ${errData.error?.message || response.statusText}`;
+                    } catch(e) {
+                        errMsg += ` Status: ${response.status}`;
+                    }
+                }
+                showError(errMsg + " Periksa API Key dan koneksi internet Anda.");
                 return;
             }
 
