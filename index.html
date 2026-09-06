@@ -447,13 +447,12 @@
             document.getElementById('statDuration').innerText = durationFormatted;
             document.getElementById('youtubeStatsGrid').classList.remove('hidden');
 
-            showLoading(`Melakukan Google Search Grounding mendalam untuk aransemen musik: "${videoTitle}"...`);
+            showLoading(`Menganalisis aransemen musik: "${videoTitle}"...`);
 
-            const userQuery = `Lakukan penelusuran web Google Search secara ketat untuk mengenali karya musik persis dari video YouTube berjudul "${videoTitle}" oleh channel "${videoChannel}". Deskripsi: "${videoDesc}". URL: https://www.youtube.com/watch?v=${videoId}. Berikan analisis musik, lirik lengkap, dan Suno AI prompt yang sangat mendalam.`;
+            const userQuery = `Analisis karya musik persis dari video YouTube berjudul "${videoTitle}" oleh channel "${videoChannel}". Deskripsi: "${videoDesc}". Berikan analisis musik, lirik lengkap, dan Suno AI prompt yang sangat mendalam.`;
             
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
-                tools: [{ "google_search": {} }],
                 systemInstruction: { parts: [{ text: systemPromptStrict100 }] },
                 generationConfig: { responseMimeType: "application/json" }
             };
@@ -503,7 +502,7 @@
                 return;
             }
 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${geminiApiKey}`;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiApiKey}`;
 
             let response = null;
             try {
@@ -525,12 +524,7 @@
                         const errData = await response.json();
                         const apiErrorMsg = errData.error?.message || response.statusText;
                         
-                        // Menangani error kuota secara khusus
-                        if (apiErrorMsg.toLowerCase().includes('quota') || response.status === 429) {
-                            errMsg = "Kuota API Gemini Anda telah habis (Rate Limit). Silakan gunakan API Key dari akun Google lain, atau coba lagi besok saat kuota gratis di-reset.";
-                        } else {
-                            errMsg += ` Error: ${apiErrorMsg}`;
-                        }
+                        errMsg = `API Error (${response.status}): ${apiErrorMsg}`;
                     } catch(e) {
                         errMsg += ` Status: ${response.status}`;
                     }
