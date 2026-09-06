@@ -523,12 +523,19 @@
                 if (response) {
                     try {
                         const errData = await response.json();
-                        errMsg += ` Error: ${errData.error?.message || response.statusText}`;
+                        const apiErrorMsg = errData.error?.message || response.statusText;
+                        
+                        // Menangani error kuota secara khusus
+                        if (apiErrorMsg.toLowerCase().includes('quota') || response.status === 429) {
+                            errMsg = "Kuota API Gemini Anda telah habis (Rate Limit). Silakan gunakan API Key dari akun Google lain, atau coba lagi besok saat kuota gratis di-reset.";
+                        } else {
+                            errMsg += ` Error: ${apiErrorMsg}`;
+                        }
                     } catch(e) {
                         errMsg += ` Status: ${response.status}`;
                     }
                 }
-                showError(errMsg + " Periksa API Key dan koneksi internet Anda.");
+                showError(errMsg);
                 return;
             }
 
